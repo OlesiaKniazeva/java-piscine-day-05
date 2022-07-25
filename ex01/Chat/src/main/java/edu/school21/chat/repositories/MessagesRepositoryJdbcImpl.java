@@ -48,7 +48,7 @@ public class MessagesRepositoryJdbcImpl implements MessagesRepository {
                     resultSet.next();
 
                     chatroom = new Chatroom(room_id, resultSet.getString("name"), null, null);
-                    return Optional.of(new Message(resultSet.getLong("id"), user, chatroom, text, time.toLocalDateTime()));
+                    return Optional.of(new Message(id, user, chatroom, text, time.toLocalDateTime()));
                 }
             } catch (SQLException e) {
                 throw new RuntimeException(e);
