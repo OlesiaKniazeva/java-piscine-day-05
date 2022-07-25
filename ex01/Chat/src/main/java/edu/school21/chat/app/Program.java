@@ -5,6 +5,7 @@ import edu.school21.chat.models.Message;
 import edu.school21.chat.repositories.MessagesRepository;
 import edu.school21.chat.repositories.MessagesRepositoryJdbcImpl;
 
+import java.sql.SQLException;
 import java.util.Optional;
 import java.util.Scanner;
 
@@ -15,29 +16,39 @@ public class Program {
 
     public static void main(String[] args) {
 
-        HikariDataSource dataSource = new HikariDataSource();
+        try {
+            HikariDataSource dataSource = new HikariDataSource();
 
-        dataSource.setJdbcUrl(URL);
-        dataSource.setUsername(USER);
-        dataSource.setPassword(PASSWORD);
+            dataSource.setJdbcUrl(URL);
+            dataSource.setUsername(USER);
+            dataSource.setPassword(PASSWORD);
 
-        MessagesRepository repo = new MessagesRepositoryJdbcImpl(dataSource);
+            MessagesRepository repo = new MessagesRepositoryJdbcImpl(dataSource);
 
-        Scanner sc = new Scanner(System.in);
-        System.out.println("Enter user id: ");
-        while (!sc.hasNextLong()) {
+            Scanner sc = new Scanner(System.in);
             System.out.println("Enter user id: ");
-            sc.next();
-        }
-        Long id = sc.nextLong();
+            while (!sc.hasNextLong()) {
+                System.out.println("Enter user id: ");
+                sc.next();
+            }
+            Long id = sc.nextLong();
 
-        Optional<Message> message = repo.findById(id);
+            Optional<Message> message = repo.findById(id);
 
-        if (message.isPresent()) {
-            Message m = message.get();
-            System.out.println(m);
-        } else {
-            System.out.println("No message found");
+            if (message.isPresent()) {
+                Message m = message.get();
+                System.out.println(m);
+            } else {
+                System.out.println("No user found");
+            }
+
+            dataSource.getConnection().close();
+            dataSource.close();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
+
+
     }
 }
