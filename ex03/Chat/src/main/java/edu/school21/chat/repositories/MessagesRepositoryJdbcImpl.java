@@ -43,7 +43,6 @@ public class MessagesRepositoryJdbcImpl implements MessagesRepository {
         }
     }
 
-
     @Override
     public Optional<Message> findById(Long id) {
         String text;
